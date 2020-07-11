@@ -246,6 +246,18 @@ class CMap {
       dstLow =
         dstLow.substring(0, lastByte) +
         String.fromCharCode(dstLow.charCodeAt(lastByte) + 1);
+      // Check the bytes to see if any of it overflows.
+      for (var i = lastByte; i > 0; i--) {
+        if (dstLow.charCodeAt(i) > 0xff) {
+          dstLow =
+            dstLow.substring(0, i - 1) +
+            String.fromCharCode(dstLow.charCodeAt(i - 1) + 1) +
+            String.fromCharCode(dstLow.charCodeAt(i) & 0xff) +
+            dstLow.substring(i + 1);
+        } else {
+          break;
+        }
+      }
     }
   }
 
